@@ -20,6 +20,7 @@ enum custom_keycodes {
   ST_MACRO_11,
   ST_MACRO_12,
   ST_MACRO_13,
+  JIGGLE,
 };
 
 
@@ -35,7 +36,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     DM_PLY1,        KC_1,           KC_2,           KC_3,           KC_4,           KC_5,                                           KC_6,           KC_7,           KC_8,           KC_9,           KC_0,           KC_INSERT,      
     KC_TAB,         KC_Q,           KC_W,           KC_F,           KC_P,           KC_B,                                           KC_J,           KC_L,           KC_U,           KC_Y,           SE_SCLN,        SE_BSLS,        
     KC_ESCAPE,      MT(MOD_LGUI, KC_A),MT(MOD_LALT, KC_R),MT(MOD_LSFT, KC_S),MT(MOD_LCTL, KC_T),KC_G,                                           KC_M,           MT(MOD_RCTL, KC_N),MT(MOD_RSFT, KC_E),MT(MOD_RALT, KC_I),MT(MOD_RGUI, KC_O),SE_APOS,        
-    KC_NO,          KC_Z,           KC_X,           KC_C,           KC_D,           KC_V,                                           KC_K,           KC_H,           KC_COMMA,       KC_DOT,         SE_SLSH,        OSL(4),         
+    JIGGLE,          KC_Z,           KC_X,           KC_C,           KC_D,           KC_V,                                           KC_K,           KC_H,           KC_COMMA,       KC_DOT,         SE_SLSH,        OSL(4),         
                                                     LT(1,KC_SPACE), KC_ENTER,                                       KC_BSPC,        LT(2,KC_SPACE)
   ),
   [1] = LAYOUT_voyager(
@@ -153,6 +154,40 @@ bool rgb_matrix_indicators_user(void) {
 }
 
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
+
+
+  // Custom QMK code
+  if (record->event.pressed) {
+    static deferred_token token = INVALID_DEFERRED_TOKEN;
+    static report_mouse_t report = {0};
+    if (token) {
+      // If jiggler is currently running, stop when any key is pressed.
+      cancel_deferred_exec(token);
+      token = INVALID_DEFERRED_TOKEN;
+      report = (report_mouse_t){};  // Clear the mouse.
+      host_mouse_send(&report);
+    } else if (keycode == JIGGLE) {
+
+      uint32_t jiggler_callback(uint32_t trigger_time, void* cb_arg) {
+        // Deltas to move in a circle of radius 20 pixels over 32 frames.
+        static const int8_t deltas[32] = {
+            0, -1, -2, -2, -3, -3, -4, -4, -4, -4, -3, -3, -2, -2, -1, 0,
+            0, 1, 2, 2, 3, 3, 4, 4, 4, 4, 3, 3, 2, 2, 1, 0};
+        static uint8_t phase = 0;
+        // Get x delta from table and y delta by rotating a quarter cycle.
+        report.x = deltas[phase];
+        report.y = deltas[(phase + 8) & 31];
+        phase = (phase + 1) & 31;
+        host_mouse_send(&report);
+        return 16;  // Call the callback every 16 ms.
+      }
+
+      token = defer_exec(1, jiggler_callback, NULL);  // Schedule callback.
+    }
+  }
+  // End of custom QMK code
+
+
   switch (keycode) {
     case ST_MACRO_0:
     if (record->event.pressed) {
