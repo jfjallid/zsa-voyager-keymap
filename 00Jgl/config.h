@@ -64,4 +64,4 @@
 
 // Custom QMK here
 #define DYNAMIC_MACRO_SIZE 512
-#define DYNAMIC_MACRO_DELAY 50
+#define DYNAMIC_MACRO_DELAY 20
