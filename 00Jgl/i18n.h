@@ -4,6 +4,7 @@
 #define SE_SLSH S(KC_7)
 #define SE_LBRC ALGR(KC_8)
 #define SE_RBRC ALGR(KC_9)
+#define SE_ACUT KC_EQL
 #define SE_MINS KC_SLSH
 #define SE_UNDS S(KC_SLSH)
 #define SE_LPRN S(KC_8)
