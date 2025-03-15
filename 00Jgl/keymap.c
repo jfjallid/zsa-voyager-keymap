@@ -35,7 +35,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   [0] = LAYOUT_voyager(
     DM_PLY1,        KC_1,           KC_2,           KC_3,           KC_4,           KC_5,                                           KC_6,           KC_7,           KC_8,           KC_9,           KC_0,           CW_TOGG,        
     KC_TAB,         KC_Q,           KC_W,           KC_F,           KC_P,           KC_B,                                           KC_J,           KC_L,           KC_U,           KC_Y,           SE_SCLN,        SE_BSLS,        
-    KC_ESCAPE,      MT(MOD_LGUI, KC_A),MT(MOD_LALT, KC_R),MT(MOD_LSFT, KC_S),MT(MOD_LCTL, KC_T),KC_G,                                           KC_M,           MT(MOD_RCTL, KC_N),MT(MOD_RSFT, KC_E),MT(MOD_RALT, KC_I),MT(MOD_RGUI, KC_O),SE_APOS,        
+    KC_ESCAPE,      MT(MOD_LGUI, KC_A),MT(MOD_LALT, KC_R),MT(MOD_LSFT, KC_S),MT(MOD_LCTL, KC_T),KC_G,                                           KC_M,           MT(MOD_RCTL, KC_N),MT(MOD_RSFT, KC_E),MT(MOD_LALT, KC_I),MT(MOD_RGUI, KC_O),SE_APOS,        
     JIGGLE,          KC_Z,           KC_X,           KC_C,           KC_D,           KC_V,                                           KC_K,           KC_H,           KC_COMMA,       KC_DOT,         SE_SLSH,        OSL(4),         
                                                     LT(1,KC_SPACE), KC_ENTER,                                       KC_BSPC,        LT(2,KC_SPACE)
   ),
@@ -72,22 +72,30 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
 uint16_t get_tapping_term(uint16_t keycode, keyrecord_t *record) {
     switch (keycode) {
+        case MT(MOD_LGUI, KC_A):
+            return TAPPING_TERM + 50;
+        case MT(MOD_LALT, KC_R):
+            return TAPPING_TERM + 50;
+        case MT(MOD_LSFT, KC_S):
+            return TAPPING_TERM -50;
         case KC_X:
-            return TAPPING_TERM + 50;
+            return 0;
         case KC_C:
-            return TAPPING_TERM + 50;
+            return 0;
         case KC_D:
-            return TAPPING_TERM + 50;
+            return 0;
+        case MT(MOD_RSFT, KC_E):
+            return TAPPING_TERM -50;
         case KC_H:
-            return TAPPING_TERM + 50;
+            return 0;
         case KC_COMMA:
-            return TAPPING_TERM + 50;
+            return 0;
         case KC_DOT:
-            return TAPPING_TERM + 50;
+            return 0;
         case KC_LEFT:
-            return TAPPING_TERM + 50;
+            return 0;
         case KC_DOWN:
-            return TAPPING_TERM + 50;
+            return 0;
         default:
             return TAPPING_TERM;
     }
